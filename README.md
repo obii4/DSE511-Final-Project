@@ -1,3 +1,6 @@
 # DSE511 Final Project
 
-#Team: Chris O'Brien, Carrie Sanford, and Jay Pike
+# Topic: Myers-Briggs Personality Classification 
+## Using Post Content to Determine Personality Type 
+
+Team: Chris O'Brien, Carrie Sanford, and Jay Pike
