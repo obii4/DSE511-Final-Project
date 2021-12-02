@@ -31,7 +31,8 @@ Project Organization
     │   │
     │   ├── data           <- Scripts to download or generate data
     │   │   └── load.py
-    │   │   └── clean_text.py
+    │   │   └── clean_text.py 
+    │   │   └── text_mbti_dimension.py <- seperate text out to create 4 data sets for each mbti dimension
     │   │   
     │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
