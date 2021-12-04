@@ -4,9 +4,9 @@ import re
 
 def clean_mbti_text(data):
     label = data['type']
-    
-    personalities = np.unique(np.array(data['type']))
-    personalities_list = personalities.tolist()
+
+    personalities_list = ['ENFJ', 'ENFP', 'ENTJ', 'ENTP', 'ESFJ', 'ESFP', 'ESTJ', 'ESTP',
+                          'INFJ', 'INFP', 'INTJ', 'INTP', 'ISFJ', 'ISFP', 'ISTJ', 'ISTP']
     personalities_list = [p.lower() for p in personalities_list]
     
     #remove links
