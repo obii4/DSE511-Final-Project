@@ -5,19 +5,17 @@ import re
 def clean_mbti_text(data):
     label = data['type']
 
-    personalities_list = ['ENFJ', 'ENFP', 'ENTJ', 'ENTP', 'ESFJ', 'ESFP', 'ESTJ', 'ESTP',
-                          'INFJ', 'INFP', 'INTJ', 'INTP', 'ISFJ', 'ISFP', 'ISTJ', 'ISTP']
-    personalities_list = [p.lower() for p in personalities_list]
+    #lowercase
+    data['posts'] = data['posts'].apply(lambda x: x.lower()) 
     
+    personalities_list = ['enfj', 'enfp', 'entj', 'entp', 'esfj', 'esfp', 'estj', 'estp',
+                          'infj', 'infp', 'intj', 'intp', 'isfj', 'isfp', 'istj', 'istp']
     #remove links
     data['posts'] = data['posts'].apply(lambda x: re.sub(r'https?:\/\/.*?[\s+]', '', x.replace("|"," ") + " ")) #links
     
     #remove MBTI personality labels from data['posts']
     for i in range(len(personalities_list)-1):
         data['posts'] = data['posts'].str.replace(personalities_list[i], '')
-    
-    #lowercase
-    data['posts'] = data['posts'].apply(lambda x: x.lower()) 
     
     #remove nonwords
     data['posts'] = data['posts'].apply(lambda x: re.sub(r'[^a-zA-Z\s]','',x))
