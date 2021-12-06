@@ -8,7 +8,7 @@ from src.models import lSVM_hyp
 
 rand_seed = 42
 
-#import data, clean, split in 4 dimensions
+#import data, clean, encode
 data = pd.read_csv('~/Desktop/mbti_1.csv')
 cleaned = clean_text.clean_mbti(data)
 data_en = encode.label(cleaned)
