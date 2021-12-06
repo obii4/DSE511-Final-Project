@@ -10,10 +10,14 @@ Project Organization
     ├── README.md          <- The top-level README for developers using this project.
     ├── raw data 	      <- The original, immutable data dump.
     ├── main.py            <- model evaluation 
-    ├── hyp_tune_EI_log_reg.py            <- hyper paramenter tuning for E/I Logistic Regression 
-    ├── hyp_tune_NS_log_reg.py            <- hyper paramenter tuning for N/S Logistic Regression
-    ├── hyp_tune_TF_log_reg.py            <- hyper paramenter tuning for T/F Logistic Regression
-    ├── hyp_tune_JP_log_reg.py            <- hyper paramenter tuning for J/P Logistic Regression    
+    ├── hyp_tune_EI_log_reg.py            <- hyper parameter tuning for E/I Logistic Regression 
+    ├── hyp_tune_EI_SVM.py                <- hyper parameter tuning for E/I Linear SVM 
+    ├── hyp_tune_NS_log_reg.py            <- hyper parameter tuning for N/S Logistic Regression
+    ├── hyp_tune_NS_SVM.py                <- hyper parameter tuning for N/S Linear SVM 
+    ├── hyp_tune_TF_log_reg.py            <- hyper parameter tuning for T/F Logistic Regression
+    ├── hyp_tune_TF_SVM.py                <- hyper parameter tuning for T/F Linear SVM 
+    ├── hyp_tune_JP_log_reg.py            <- hyper parameter tuning for J/P Logistic Regression  
+    ├── hyp_tune_JP_SVM.py                <- hyper parameter tuning for J/P Linear SVM   
     │
     ├── notebooks          <- Jupyter notebooks that contain initial data data exploration
     │   └── o'brien exploration.ipynb    
