@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import re
 
-def clean_mbti_text(data):
+def clean_mbti(data):
     label = data['type']
 
     #lowercase
