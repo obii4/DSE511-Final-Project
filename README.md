@@ -10,10 +10,12 @@ Project Organization
     ├── README.md          <- The top-level README for developers using this project.
     ├── raw data 	      <- The original, immutable data dump.
     ├── main.py            <- model evaluation 
-    ├── hyp_tune_EI_log_reg.py            <- hyper parameter tuning for E/I Logistic Regression 
-    ├── hyp_tune_EI_SVM.py                <- hyper parameter tuning for E/I Linear SVM 
-    ├── hyp_tune_NS_log_reg.py            <- hyper parameter tuning for N/S Logistic Regression
-    ├── hyp_tune_NS_SVM.py                <- hyper parameter tuning for N/S Linear SVM 
+    ├── hyp_tune_ALL_log_reg.py            <- hyper parameter tuning for n=16 Logistic Regression    
+    ├── hyp_tune_ALL_lSVM.py                <- hyper parameter tuning for n=16 Linear SVM 
+    ├── hyp_tune_EI_log_reg.py               <- hyper parameter tuning for E/I Logistic Regression 
+    ├── hyp_tune_EI_SVM.py                   <- hyper parameter tuning for E/I Linear SVM 
+    ├── hyp_tune_NS_log_reg.py             <- hyper parameter tuning for N/S Logistic Regression
+    ├── hyp_tune_NS_SVM.py                 <- hyper parameter tuning for N/S Linear SVM 
     ├── hyp_tune_TF_log_reg.py            <- hyper parameter tuning for T/F Logistic Regression
     ├── hyp_tune_TF_SVM.py                <- hyper parameter tuning for T/F Linear SVM 
     ├── hyp_tune_JP_log_reg.py            <- hyper parameter tuning for J/P Logistic Regression  
@@ -35,6 +37,7 @@ Project Organization
     │   │   └── __init__.py
     │   │   └── load.py
     │   │   └── clean_text.py 
+    │   │   └── encode.py <-encodes MBTI labels to numbers
     │   │   └── dimension_4x.py <- separate text out to create 4 data sets for each mbti dimension
     │   │   
     │   │
