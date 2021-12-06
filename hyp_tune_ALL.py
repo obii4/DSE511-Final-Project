@@ -3,6 +3,7 @@ from src.data import clean_text
 from src.data import dimension_4x
 from src.features import extraction
 from src.models import log_reg_hyp
+from src.models import lSVM_hyp
 
 
 rand_seed = 42
@@ -10,16 +11,16 @@ rand_seed = 42
 #import data, clean, split in 4 dimensions
 data = pd.read_csv('~/Desktop/mbti_1.csv')
 cleaned = clean_text.clean_mbti(data)
-EI, NS, TF, JP = dimension_4x.text_split(cleaned)
+data_en = encode.label(cleaned)
 
-## EI Logistic Regression Tuning ##
-EI_para = log_reg_hyp.tune(EI)
+##Logistic Regression Tuning ##
+log_para = log_reg_hyp.tune(data_en)
 
-## NS Logistic Regression Tuning ##
-NS_para = log_reg_hyp.tune(NS)
+## Linear SVM Tuning ##
+svm_para = lSVM_hyp.tune(data_en)
 
-## TF Logistic Regression Tuning ##
-TF_para = log_reg_hyp.tune(TF)
+## Random Forest Tuning ##
+#rf_para =
 
-## JP Logistic Regression Tuning ##
-JP_para = log_reg_hyp.tune(JP)
+## XGBoost Tuning ##
+#xgb_para =
