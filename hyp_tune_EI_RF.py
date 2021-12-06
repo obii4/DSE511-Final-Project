@@ -5,13 +5,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import GridSearchCV
-from sklearn.svm import LinearSVC
+from sklearn.ensemble import RandomForestClassifier
 
 from src.data import clean_text
 from src.data import dimension_4x
 from src.data import train_val_test
 from src.features import extraction
-from src.data import encode
 
 rand_seed = 42
 
@@ -20,25 +19,38 @@ data = pd.read_csv('~/Desktop/mbti_1.csv')
 
 cleaned = clean_text.clean_mbti(data)
 
-data_en = encode.label(cleaned)
+#split in 4 dimensions
+EI, NS, TF, JP = dimension_4x.text_split(cleaned)
 
 #text and labels
-all_x = data_en['posts']
-all_y = data_en['type']
+EI_x = EI['posts']
+EI_y = EI['type']
 
 #process raw text into ML compatible features
-X = extraction.feature_Tfidf(all_x)
+X = extraction.feature_Tfidf(EI_x)
 
 #split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, all_y)
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
 
-model = LinearSVC(random_state = 0)
-penalty = ['l2','l1']
-#loss = ['hinge', 'squared_hinge']
-c_values = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100]
-
-#define grid search
-grid = dict(penalty=penalty, C=c_values) #loss=loss,
+model = RandomForestClassifier(random_state = 0, n_estimators = 200)
+# Number of estimators
+n_estimators = [10, 100, 1000, 10000, 100000]
+# Maximum number of levels in tree
+max_depth = [int(x) for x in np.linspace(10, 110, num = 5)]
+max_depth.append(None)
+# Minimum number of samples required to split a node
+min_samples_split = [2, 5] #10]
+# Minimum number of samples required at each leaf node
+min_samples_leaf = [1, 2] #4]
+# Method of selecting samples for training each tree
+bootstrap = [True, False]
+# Create the random grid
+grid = {
+               'n_estimators': n_estimators,
+               'max_depth': max_depth,
+               'min_samples_split': min_samples_split,
+               'min_samples_leaf': min_samples_leaf,
+               'bootstrap': bootstrap}
 grid_search = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, scoring='accuracy',error_score=0)
 grid_result = grid_search.fit(X_val,y_val)
 # summarize results
