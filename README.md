@@ -11,7 +11,8 @@ Project Organization
     ├── raw data 	      <- The original, immutable data dump.
     ├── main.py            <- model evaluation 
     ├── hyp_tune_ALL.py            	         <- hyper parameter tuning for n=16 problem   
-    ├── hyp_tune_lSVM_4x.py                <- hyper parameter tuning for n=2 Linear SVM 
+    ├── hyp_tune_lSVM_4x.py                  <- hyper parameter tuning for n=2 Linear SVM 
+    ├── hyp_tune_log_reg_4x.py               <- hyper parameter tuning for n=2 logistic regression
     │
     ├── notebooks          <- Jupyter notebooks that contain initial data data exploration
     │   └── o'brien exploration.ipynb    
