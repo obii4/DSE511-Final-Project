@@ -34,13 +34,12 @@ X = extraction.feature_Tfidf(JP_x)
 X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, JP_y)
 
 model = LogisticRegression(random_state=rand_seed, max_iter=1000)
-solvers = ['newton-cg', 'lbfgs', 'liblinear', 'saga', 'sag']
-penalty = ['l2']
-c_values = [65, 66.36363636, 67.72727273, 69.09090909, 70.45454545, 71.81818182,
- 73.18181818, 74.54545455, 75.90909091, 77.27272727, 78.63636364, 80]
+solvers = ['liblinear']
+penalty = ['l2','l1']
+c_values = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100]
 
 #define grid search
-grid = dict(solver=solvers,penalty=penalty,C=c_values)
+grid = dict(solver=solvers, penalty=penalty,C=c_values) #solver=solvers
 grid_search = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, scoring='accuracy', error_score=0)
 grid_result = grid_search.fit(X_val,y_val)
 
