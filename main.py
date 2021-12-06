@@ -60,7 +60,6 @@ X = extraction.feature_Tfidf(EI_x)
 X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
 
 lg = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
-
 t0 = time.time()
 lg.fit(X_train,y_train)
 t1 = time.time() # ending time
@@ -125,7 +124,7 @@ X = extraction.feature_Tfidf(JP_x)
 #split text data
 X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, JP_y)
 
-lg = LogisticRegression(random_state=0, C=73.18181818, penalty='l2', solver = 'saga', max_iter=1000)
+lg = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
 
 t0 = time.time()
 lg.fit(X_train,y_train)
@@ -139,3 +138,101 @@ lg_jp_pred_time = t1-t0
 
 lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
 df_lg_JP = pd.DataFrame(lg_report)
+
+
+### Linear SVM ###
+## E/I
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(EI_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
+
+l_svc = LinearSVC(random_state = 0, C = 0.0001, penalty = 'l2')
+
+t0 = time.time()
+l_svc.fit(X_train,y_train)
+t1 = time.time() # ending time
+lsvc_ei_train_time = t1-t0
+
+l_svc_score = l_svc.score(X_test,y_test)
+
+t0 = time.time()
+y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
+t1 = time.time() # ending time
+lsvc_ei_pred_time = t1-t0
+
+l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
+df_lsvc_ei = pd.DataFrame(l_svc_report)
+
+## N/S
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(NS_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
+
+l_svc = LinearSVC(random_state = 0, C = 100, penalty = 'l2')
+
+t0 = time.time()
+l_svc.fit(X_train,y_train)
+t1 = time.time() # ending time
+lsvc_ns_train_time = t1-t0
+
+l_svc_score = l_svc.score(X_test,y_test)
+
+t0 = time.time()
+y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
+t1 = time.time() # ending time
+lsvc_ns_pred_time = t1-t0
+
+l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
+df_lsvc_ns = pd.DataFrame(l_svc_report)
+
+## T/F
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(TF_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, TF_y)
+
+l_svc = LinearSVC(random_state = 0, C = 10, penalty = 'l2')
+
+t0 = time.time()
+l_svc.fit(X_train,y_train)
+t1 = time.time() # ending time
+lsvc_tf_train_time = t1-t0
+
+l_svc_score = l_svc.score(X_test,y_test)
+
+t0 = time.time()
+y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
+t1 = time.time() # ending time
+lsvc_tf_pred_time = t1-t0
+
+l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
+df_lsvc_tf = pd.DataFrame(l_svc_report)
+
+## J/P
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(JP_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, JP_y)
+
+l_svc = LinearSVC(random_state = 0, C = 10, penalty = 'l2')
+
+t0 = time.time()
+l_svc.fit(X_train,y_train)
+t1 = time.time() # ending time
+lsvc_jp_train_time = t1-t0
+
+l_svc_score = l_svc.score(X_test,y_test)
+
+t0 = time.time()
+y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
+t1 = time.time() # ending time
+lsvc_jp_pred_time = t1-t0
+
+l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
+df_lsvc_jp = pd.DataFrame(l_svc_report)
