@@ -11,6 +11,7 @@ from src.data import clean_text
 from src.data import dimension_4x
 from src.data import train_val_test
 from src.features import extraction
+from src.data import encode
 
 rand_seed = 42
 
@@ -19,18 +20,17 @@ data = pd.read_csv('~/Desktop/mbti_1.csv')
 
 cleaned = clean_text.clean_mbti(data)
 
-#split in 4 dimensions
-EI, NS, TF, JP = dimension_4x.text_split(cleaned)
+data_en = encode.label(cleaned)
 
 #text and labels
-EI_x = EI['posts']
-EI_y = EI['type']
+all_x = data_en['posts']
+all_y = data_en['type']
 
 #process raw text into ML compatible features
-X = extraction.feature_Tfidf(EI_x)
+X = extraction.feature_Tfidf(all_x)
 
 #split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, all_y)
 
 model = LinearSVC(random_state = 0)
 penalty = ['l2','l1']

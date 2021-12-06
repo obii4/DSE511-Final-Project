@@ -11,15 +11,59 @@ from sklearn.linear_model import LogisticRegression
 from src.data import clean_text
 from src.data import dimension_4x
 from src.features import extraction
+from src.data import encode
 
 #import data
 data = pd.read_csv('~/Desktop/mbti_1.csv')
 cleaned = clean_text.clean_mbti(data)
+data_en = encode.label(cleaned) #labels encoded
 
+#text and labels
+all_x = data_en['posts']
+all_y = data_en['type']
 
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(all_x)
 
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, all_y)
 
+### This section was evaulate the models when using n = 2 classification ###
+### LogisticRegression ###
+lg = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
 
+t0 = time.time()
+lg.fit(X_train,y_train)
+t1 = time.time() # ending time
+lg_ns_train_time = t1-t0
+
+t0 = time.time()
+y_true, y_pred_lg = y_val, lg.predict(X_val)
+t1 = time.time() # ending time
+lg_ns_pred_time = t1-t0
+
+lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
+df_lg_ns = pd.DataFrame(lg_report)
+
+### Linear SVM ###
+rand_seed = 42
+
+l_svc = LinearSVC(random_state = 0, C = 10, penalty = 'l2')
+
+t0 = time.time()
+l_svc.fit(X_train,y_train)
+t1 = time.time() # ending time
+lsvc_all_train_time = t1-t0
+
+l_svc_score = l_svc.score(X_test,y_test)
+
+t0 = time.time()
+y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
+t1 = time.time() # ending time
+lsvc_all_pred_time = t1-t0
+
+l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
+df_all_jp = pd.DataFrame(l_svc_report)
 
 
 
@@ -30,7 +74,7 @@ cleaned = clean_text.clean_mbti(data)
 
 ###
 ###
-### This section was evaulate the models when using n = 2 classification 
+### This section was evaulate the models when using n = 2 classification ###
 ##split in 4 dimensions
 EI, NS, TF, JP = dimension_4x.text_split(cleaned)
 
