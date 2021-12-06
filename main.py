@@ -1,13 +1,11 @@
 import pandas as pd
 import numpy as np
 import time
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from sklearn.feature_selection import SelectFromModel
-from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
+from xgboost import XGBClassifier
 
+from src.data import train_val_test
 from src.data import clean_text
 from src.data import dimension_4x
 from src.features import extraction
@@ -46,16 +44,14 @@ lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
 df_lg_ns = pd.DataFrame(lg_report)
 
 ### Linear SVM ###
-rand_seed = 42
-
-l_svc = LinearSVC(random_state = 0, C = 10, penalty = 'l2')
+l_svc = LinearSVC(random_state=0, C=10, penalty='l2')
 
 t0 = time.time()
-l_svc.fit(X_train,y_train)
+l_svc.fit(X_train, y_train)
 t1 = time.time() # ending time
 lsvc_all_train_time = t1-t0
 
-l_svc_score = l_svc.score(X_test,y_test)
+l_svc_score = l_svc.score(X_test, y_test)
 
 t0 = time.time()
 y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
@@ -65,7 +61,23 @@ lsvc_all_pred_time = t1-t0
 l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
 df_all_jp = pd.DataFrame(l_svc_report)
 
+### XGBoost Classification ###
+XGB = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", max_depth=10, eta=0.05, subsample=1)
 
+t0 = time.time()
+XGB.fit(X_train, y_train)
+t1 = time.time() # ending time
+XGB_all_train_time = t1-t0
+
+XGB_score = XGB.score(X_test, y_test)
+
+t0 = time.time()
+y_true, y_pred_XGB = y_test, XGB.predict(X_test)
+t1 = time.time() # ending time
+XGB_all_pred_time = t1-t0
+
+XGB_report = classification_report(y_true, y_pred_XGB, output_dict=True)
+df_all_jp = pd.DataFrame(XGB_report)
 
 
 
