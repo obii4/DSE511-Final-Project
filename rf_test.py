@@ -1,53 +1,50 @@
 import pandas as pd
 import numpy as np
 import time
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
 from src.data import clean_text
 from src.data import dimension_4x
 from src.data import train_val_test
 from src.features import extraction
-from src.data import encode
+
+rand_seed = 42
 
 #import data
 data = pd.read_csv('~/Desktop/mbti_1.csv')
 
 cleaned = clean_text.clean_mbti(data)
-#import data
-data = pd.read_csv('~/Desktop/mbti_1.csv')
 
-cleaned = clean_text.clean_mbti(data)
 #split in 4 dimensions
 EI, NS, TF, JP = dimension_4x.text_split(cleaned)
 
 #text and labels
-EI_x = EI['posts']
-EI_y = EI['type']
+NS_x = NS['posts']
+NS_y = NS['type']
 
 #process raw text into ML compatible features
-X = extraction.feature_Tfidf(EI_x)
+X = extraction.feature_Tfidf(NS_x)
 
 #split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
 
-lg = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
-
-t0 = time.time()
-lg.fit(X_train,y_train)
-t1 = time.time() # ending time
-lg_ns_train_time = t1-t0
+rf = RandomForestClassifier(random_state=0, bootstrap=True, max_depth=10, min_samples_leaf=1, min_samples_split=2)
 
 t0 = time.time()
-y_true, y_pred_lg = y_val, lg.predict(X_val)
+rf.fit(X_train,y_train)
 t1 = time.time() # ending time
-lg_ns_pred_time = t1-t0
+rf_train_time = t1-t0
 
-lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
-df_lg_ns = pd.DataFrame(lg_report)
+t0 = time.time()
+y_true, y_pred_rf = y_test, rf.predict(X_test)
+t1 = time.time() # ending time
+rf_pred_time = t1-t0
 
-print(df_lg_ns)
+rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
+df_rf = pd.DataFrame(rf_report)
+
+print(df_rf)
