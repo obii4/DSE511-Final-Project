@@ -25,8 +25,8 @@ def tune(Z):
     X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, y)
 
     model = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror")
-    subsample = [0.5, 1]
-    max_depth = [5, 10, 15]
+    subsample = [0.5]
+    max_depth = [5, 10]
     eta = [0.05, 0.1]
 
     # define grid search
