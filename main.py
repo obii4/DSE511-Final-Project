@@ -3,6 +3,8 @@ import numpy as np
 import time
 from sklearn.metrics import classification_report
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import LinearSVC
 from xgboost import XGBClassifier
 
 from src.data import train_val_test
@@ -380,4 +382,55 @@ t1 = time.time() # ending time
 rf_jp_pred_time = t1-t0
 
 rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
-df_jp_tf = pd.DataFrame(rf_report)
+df_rf_jp = pd.DataFrame(rf_report)
+
+### XGBoost ###
+## E/I
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(EI_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
+
+xgb = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=1)
+
+t0 = time.time()
+xgb.fit(X_train,y_train)
+t1 = time.time() # ending time
+xgb_train_time_EI = t1-t0
+
+t0 = time.time()
+y_true, y_pred_xgb = y_test, xgb.predict(X_test)
+t1 = time.time() # ending time
+xgb_pred_time = t1-t0
+
+xgb_report = classification_report(y_true, y_pred_xgb, output_dict=True)
+df_xgb = pd.DataFrame(xgb_report)
+
+## N/S
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(NS_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
+
+xgb = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=1)
+
+t0 = time.time()
+xgb.fit(X_train,y_train)
+t1 = time.time() # ending time
+xgb_train_time_NS = t1-t0
+
+t0 = time.time()
+y_true, y_pred_NS_xgb = y_test, xgb.predict(X_test)
+t1 = time.time() # ending time
+xgb_pred_time = t1-t0
+
+xgb_report = classification_report(y_true, y_pred_xgb, output_dict=True)
+df_xgb = pd.DataFrame(xgb_report)
+
+#TF
+xgb = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=.5)
+
+#JP
+xgb = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.05, max_depth=10, subsample=1)
