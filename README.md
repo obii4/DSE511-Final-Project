@@ -10,6 +10,7 @@ Project Organization
     ├── README.md          <- The top-level README for developers using this project.
     ├── raw data 	             <- The original, immutable data dump.
     ├── main.py                  <- model testing, obtain all experiment results 
+    ├── summarize_results.py           	   <- generate tables that show accuracy, train/test times
     ├── hyp_tune_ALL.py            	           <- hyper parameter tuning for n=16 problem   
     ├── hyp_tune_lSVM_4x.py                  <- hyper parameter tuning for n=2 Linear SVM 
     ├── hyp_tune_log_reg_4x.py               <- hyper parameter tuning for n=2 logistic regression
@@ -49,6 +50,7 @@ Project Organization
     │   │   └── model_eval.py            <-callable function to evaluate test data in main 
     │   │   ├── results           <- pickled results from test data set of all models for both n=16 and n=2 problems      
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
+    │   └── visualization  
+    │   │   ├── tables          <- accuracy, train/test times for both n=16 and n=2 problems      
+    │       
     │
