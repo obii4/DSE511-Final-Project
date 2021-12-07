@@ -280,3 +280,92 @@ lsvc_jp_pred_time = t1-t0
 
 l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
 df_lsvc_jp = pd.DataFrame(l_svc_report)
+
+### Random Forest ###
+## E/I
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(EI_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
+
+rf = RandomForestClassifier(random_state=0, bootstrap=True, max_depth=10, min_samples_leaf=1, min_samples_split=2)
+
+t0 = time.time()
+rf.fit(X_train, y_train)
+t1 = time.time() # ending time
+rf_ei_train_time = t1 - t0
+
+t0 = time.time()
+y_true, y_pred_rf = y_test, rf.predict(X_test)
+t1 = time.time() # ending time
+rf_ei_pred_time = t1-t0
+
+rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
+df_rf_ei = pd.DataFrame(rf_report)
+
+## N/S
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(NS_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
+
+rf = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=10, min_samples_leaf=1, min_samples_split=2, n_estimators=100)
+
+t0 = time.time()
+rf.fit(X_train, y_train)
+t1 = time.time() # ending time
+rf_ns_train_time = t1 - t0
+
+t0 = time.time()
+y_true, y_pred_rf = y_test, rf.predict(X_test)
+t1 = time.time() # ending time
+rf_ns_pred_time = t1-t0
+
+rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
+df_rf_ns = pd.DataFrame(rf_report)
+
+## T/F
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(TF_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, TF_y)
+
+rf = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=60, min_samples_leaf=1, min_samples_split=5, n_estimators=1000)
+
+t0 = time.time()
+rf.fit(X_train, y_train)
+t1 = time.time() # ending time
+rf_tf_train_time = t1 - t0
+
+t0 = time.time()
+y_true, y_pred_rf = y_test, rf.predict(X_test)
+t1 = time.time() # ending time
+rf_tf_pred_time = t1-t0
+
+rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
+df_rf_tf = pd.DataFrame(rf_report)
+
+## J/P
+#process raw text into ML compatible features
+X = extraction.feature_Tfidf(JP_x)
+
+#split text data
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, JP_y)
+
+rf = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=60, min_samples_leaf=1, min_samples_split=5, n_estimators=100)
+
+t0 = time.time()
+rf.fit(X_train, y_train)
+t1 = time.time() # ending time
+rf_jp_train_time = t1 - t0
+
+t0 = time.time()
+y_true, y_pred_rf = y_test, rf.predict(X_test)
+t1 = time.time() # ending time
+rf_jp_pred_time = t1-t0
+
+rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
+df_jp_tf = pd.DataFrame(rf_report)
