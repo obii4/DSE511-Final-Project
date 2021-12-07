@@ -13,6 +13,7 @@ Project Organization
     ├── hyp_tune_ALL.py            	         <- hyper parameter tuning for n=16 problem   
     ├── hyp_tune_lSVM_4x.py                  <- hyper parameter tuning for n=2 Linear SVM 
     ├── hyp_tune_log_reg_4x.py               <- hyper parameter tuning for n=2 logistic regression
+    ├── hyp_tune_rf_4x.py                    <- hyper parameter tuning for n=2 random forest
     │
     ├── notebooks          <- Jupyter notebooks that contain initial data data exploration
     │   └── o'brien exploration.ipynb    
