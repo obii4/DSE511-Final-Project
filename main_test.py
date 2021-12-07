@@ -14,6 +14,8 @@ from src.features import extraction
 from src.data import encode
 from src.models import model_eval
 
+./data/ashrae
+train_file = os.path.join(data_path, 'raw_data.csv')
 
 
 #import data
