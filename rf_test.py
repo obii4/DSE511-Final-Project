@@ -23,16 +23,16 @@ cleaned = clean_text.clean_mbti(data)
 EI, NS, TF, JP = dimension_4x.text_split(cleaned)
 
 #text and labels
-NS_x = NS['posts']
-NS_y = NS['type']
+TF_x = TF['posts']
+TF_y = TF['type']
 
 #process raw text into ML compatible features
-X = extraction.feature_Tfidf(NS_x)
+X = extraction.feature_Tfidf(TF_x)
 
 #split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
+X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, TF_y)
 
-rf = RandomForestClassifier(random_state=0, bootstrap=True, max_depth=10, min_samples_leaf=1, min_samples_split=2)
+rf = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=60, min_samples_leaf=1, min_samples_split=5, n_estimators=1000)
 
 t0 = time.time()
 rf.fit(X_train,y_train)
