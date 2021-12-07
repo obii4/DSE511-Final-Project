@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LogisticRegression
+from xgboost import XGBClassifier
 
 from src.data import clean_text
 from src.data import dimension_4x
@@ -26,7 +26,7 @@ def tune(Z):
 
     model = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror")
     subsample = [0.5, 1]
-    max_depth = [5, 10]
+    max_depth = [5, 10, 15]
     eta = [0.05, 0.1]
 
     # define grid search
