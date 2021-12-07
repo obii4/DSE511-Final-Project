@@ -12,6 +12,7 @@ from src.data import clean_text
 from src.data import dimension_4x
 from src.features import extraction
 from src.data import encode
+from src.models import model_eval
 
 #import data
 data = pd.read_csv('~/Desktop/mbti_1.csv')
@@ -29,61 +30,38 @@ X = extraction.feature_Tfidf(all_x)
 X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, all_y)
 
 ### This section was evaulate the models when using n = 2 classification ###
-### LogisticRegression ###
-lg = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
 
-t0 = time.time()
-lg.fit(X_train,y_train)
-t1 = time.time() # ending time
-lg_ns_train_time = t1-t0
-
-t0 = time.time()
-y_true, y_pred_lg = y_val, lg.predict(X_val)
-t1 = time.time() # ending time
-lg_ns_pred_time = t1-t0
-
-lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
-df_lg_ns = pd.DataFrame(lg_report)
+### Logistic Regression ###
+LG = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
+times_LG, labels_LG, table_LG = model_eval.eval(LG, X_train, y_train, X_test, y_test)
+#store results
+times_LG.to_pickle("src/models/results/LG_16_times.pkl")
+labels_LG.to_pickle("src/models/results/LG_16_labels.pkl")
+table_LG.to_pickle("src/models/results/LG_16_class_results.pkl")
 
 ### Linear SVM ###
-l_svc = LinearSVC(random_state=0, C=10, penalty='l2')
+LSVC = LinearSVC(random_state=0, C=10, penalty='l2')
+times_LSVC, labels_LSVC, table_LSVC = model_eval.eval(LSVC, X_train, y_train, X_test, y_test)
+#store results
+times_LSVC.to_pickle("src/models/results/LSVC_16_times.pkl")
+labels_LSVC.to_pickle("src/models/results/LSVC_16_labels.pkl")
+table_LSVC.to_pickle("src/models/results/LSVC_16_class_results.pkl")
 
-t0 = time.time()
-l_svc.fit(X_train, y_train)
-t1 = time.time() # ending time
-lsvc_all_train_time = t1-t0
+### XGBoost ###
+XGB = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.05, max_depth=5, subsample=.5)
+times_XGB, labels_XGB, table_XGB = model_eval.eval(XGB, X_train, y_train, X_test, y_test)
+#store results
+times_XGB.to_pickle("src/models/results/XGB_16_times.pkl")
+labels_XGB.to_pickle("src/models/results/XGB_16_labels.pkl")
+table_XGB.to_pickle("src/models/results/XGB_16_class_results.pkl")
 
-l_svc_score = l_svc.score(X_test, y_test)
-
-t0 = time.time()
-y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
-t1 = time.time() # ending time
-lsvc_all_pred_time = t1-t0
-
-l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
-df_all_jp = pd.DataFrame(l_svc_report)
-
-### XGBoost Classification ###
-XGB = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", max_depth=10, eta=0.05, subsample=1)
-
-t0 = time.time()
-XGB.fit(X_train, y_train)
-t1 = time.time() # ending time
-XGB_all_train_time = t1-t0
-
-XGB_score = XGB.score(X_test, y_test)
-
-t0 = time.time()
-y_true, y_pred_XGB = y_test, XGB.predict(X_test)
-t1 = time.time() # ending time
-XGB_all_pred_time = t1-t0
-
-XGB_report = classification_report(y_true, y_pred_XGB, output_dict=True)
-df_all_jp = pd.DataFrame(XGB_report)
-
-
-
-
+### Random Forest ###
+RF = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=None, min_samples_leaf=2, min_samples_split=5, n_estimators=100)
+times_RF, labels_RF, table_RF = model_eval.eval(RF, X_train, y_train, X_test, y_test)
+#store results
+times_RF.to_pickle("src/models/results/RF_16_times.pkl")
+labels_RF.to_pickle("src/models/results/RF_16_labels.pkl")
+table_RF.to_pickle("src/models/results/RF_16_class_results.pkl")
 
 
 ###
@@ -109,328 +87,156 @@ TF_y = TF['type']
 JP_x = JP['posts']
 JP_y = JP['type']
 
+
+#process raw text into ML compatible features
+X_EI = extraction.feature_Tfidf(EI_x)
+X_NS = extraction.feature_Tfidf(NS_x)
+X_TF = extraction.feature_Tfidf(TF_x)
+X_JP = extraction.feature_Tfidf(JP_x)
+
+#split text data
+EI_X_train, __, EI_X_test, EI_y_train, __, EI_y_test = train_val_test.split(X_EI, EI_y)
+NS_X_train, __, NS_X_test, NS_y_train, __, NS_y_test = train_val_test.split(X_NS, NS_y)
+TF_X_train, __, TF_X_test, TF_y_train, __, TF_y_test = train_val_test.split(X_TF, TF_y)
+JP_X_train, __, JP_X_test, JP_y_train, __, JP_y_test = train_val_test.split(X_JP, JP_y)
+
+
+### EI ###
+
+LG = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
+LSVC = LinearSVC(random_state = 0, C = 0.0001, penalty = 'l2')
+XGB = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=1)
+RF = RandomForestClassifier(random_state=0, bootstrap=True, max_depth=10, min_samples_leaf=1, min_samples_split=2)
+
 ### LogisticRegression ###
-## E/I
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(EI_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
-
-lg = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
-t0 = time.time()
-lg.fit(X_train,y_train)
-t1 = time.time() # ending time
-lg_ei_train_time = t1-t0
-
-t0 = time.time()
-y_true, y_pred_lg = y_test, lg.predict(X_test)
-t1 = time.time() # ending time
-lg_ei_pred_time = t1-t0
-
-lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
-df_lg_ei = pd.DataFrame(lg_report)
-
-## N/S
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(NS_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
-
-lg = LogisticRegression(random_state=0, C=10, penalty='l1', solver = 'liblinear', max_iter=1000)
-
-t0 = time.time()
-lg.fit(X_train,y_train)
-t1 = time.time() # ending time
-lg_ns_train_time = t1-t0
-
-t0 = time.time()
-y_true, y_pred_lg = y_test, lg.predict(X_test)
-t1 = time.time() # ending time
-lg_ns_pred_time = t1-t0
-
-lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
-df_lg_ns = pd.DataFrame(lg_report)
-
-## T/F
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(TF_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, TF_y)
-
-lg = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
-
-t0 = time.time()
-lg.fit(X_train,y_train)
-t1 = time.time() # ending time
-lg_tf_train_time = t1-t0
-
-t0 = time.time()
-y_true, y_pred_lg = y_test, lg.predict(X_test)
-t1 = time.time() # ending time
-lg_tf_pred_time = t1-t0
-
-lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
-df_lg_tf = pd.DataFrame(lg_report)
-
-## J/P
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(JP_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, JP_y)
-
-lg = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
-
-t0 = time.time()
-lg.fit(X_train,y_train)
-t1 = time.time() # ending time
-lg_jp_train_time = t1-t0
-
-t0 = time.time()
-y_true, y_pred_lg = y_test, lg.predict(X_test)
-t1 = time.time() # ending time
-lg_jp_pred_time = t1-t0
-
-lg_report = classification_report(y_true, y_pred_lg, output_dict=True)
-df_lg_JP = pd.DataFrame(lg_report)
-
+times_LG, labels_LG, table_LG = model_eval.eval(LG, EI_X_train, EI_y_train, EI_X_test, EI_y_test)
+#store results
+times_LG.to_pickle("src/models/results/LG_EI_times.pkl")
+labels_LG.to_pickle("src/models/results/LG_EI_labels.pkl")
+table_LG.to_pickle("src/models/results/LG_EI_class_results.pkl")
 
 ### Linear SVM ###
-## E/I
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(EI_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
-
-l_svc = LinearSVC(random_state = 0, C = 0.0001, penalty = 'l2')
-
-t0 = time.time()
-l_svc.fit(X_train,y_train)
-t1 = time.time() # ending time
-lsvc_ei_train_time = t1-t0
-
-l_svc_score = l_svc.score(X_test,y_test)
-
-t0 = time.time()
-y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
-t1 = time.time() # ending time
-lsvc_ei_pred_time = t1-t0
-
-l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
-df_lsvc_ei = pd.DataFrame(l_svc_report)
-
-## N/S
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(NS_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
-
-l_svc = LinearSVC(random_state = 0, C = 100, penalty = 'l2')
-
-t0 = time.time()
-l_svc.fit(X_train,y_train)
-t1 = time.time() # ending time
-lsvc_ns_train_time = t1-t0
-
-l_svc_score = l_svc.score(X_test,y_test)
-
-t0 = time.time()
-y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
-t1 = time.time() # ending time
-lsvc_ns_pred_time = t1-t0
-
-l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
-df_lsvc_ns = pd.DataFrame(l_svc_report)
-
-## T/F
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(TF_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, TF_y)
-
-l_svc = LinearSVC(random_state = 0, C = 10, penalty = 'l2')
-
-t0 = time.time()
-l_svc.fit(X_train,y_train)
-t1 = time.time() # ending time
-lsvc_tf_train_time = t1-t0
-
-l_svc_score = l_svc.score(X_test,y_test)
-
-t0 = time.time()
-y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
-t1 = time.time() # ending time
-lsvc_tf_pred_time = t1-t0
-
-l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
-df_lsvc_tf = pd.DataFrame(l_svc_report)
-
-## J/P
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(JP_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, JP_y)
-
-l_svc = LinearSVC(random_state = 0, C = 10, penalty = 'l2')
-
-t0 = time.time()
-l_svc.fit(X_train,y_train)
-t1 = time.time() # ending time
-lsvc_jp_train_time = t1-t0
-
-l_svc_score = l_svc.score(X_test,y_test)
-
-t0 = time.time()
-y_true, y_pred_lSVC = y_test, l_svc.predict(X_test)
-t1 = time.time() # ending time
-lsvc_jp_pred_time = t1-t0
-
-l_svc_report = classification_report(y_true, y_pred_lSVC, output_dict=True)
-df_lsvc_jp = pd.DataFrame(l_svc_report)
-
-### Random Forest ###
-## E/I
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(EI_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
-
-rf = RandomForestClassifier(random_state=0, bootstrap=True, max_depth=10, min_samples_leaf=1, min_samples_split=2)
-
-t0 = time.time()
-rf.fit(X_train, y_train)
-t1 = time.time() # ending time
-rf_ei_train_time = t1 - t0
-
-t0 = time.time()
-y_true, y_pred_rf = y_test, rf.predict(X_test)
-t1 = time.time() # ending time
-rf_ei_pred_time = t1-t0
-
-rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
-df_rf_ei = pd.DataFrame(rf_report)
-
-## N/S
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(NS_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
-
-rf = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=10, min_samples_leaf=1, min_samples_split=2, n_estimators=100)
-
-t0 = time.time()
-rf.fit(X_train, y_train)
-t1 = time.time() # ending time
-rf_ns_train_time = t1 - t0
-
-t0 = time.time()
-y_true, y_pred_rf = y_test, rf.predict(X_test)
-t1 = time.time() # ending time
-rf_ns_pred_time = t1-t0
-
-rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
-df_rf_ns = pd.DataFrame(rf_report)
-
-## T/F
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(TF_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, TF_y)
-
-rf = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=60, min_samples_leaf=1, min_samples_split=5, n_estimators=1000)
-
-t0 = time.time()
-rf.fit(X_train, y_train)
-t1 = time.time() # ending time
-rf_tf_train_time = t1 - t0
-
-t0 = time.time()
-y_true, y_pred_rf = y_test, rf.predict(X_test)
-t1 = time.time() # ending time
-rf_tf_pred_time = t1-t0
-
-rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
-df_rf_tf = pd.DataFrame(rf_report)
-
-## J/P
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(JP_x)
-
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, JP_y)
-
-rf = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=60, min_samples_leaf=1, min_samples_split=5, n_estimators=100)
-
-t0 = time.time()
-rf.fit(X_train, y_train)
-t1 = time.time() # ending time
-rf_jp_train_time = t1 - t0
-
-t0 = time.time()
-y_true, y_pred_rf = y_test, rf.predict(X_test)
-t1 = time.time() # ending time
-rf_jp_pred_time = t1-t0
-
-rf_report = classification_report(y_true, y_pred_rf, output_dict=True)
-df_rf_jp = pd.DataFrame(rf_report)
+times_LSVC, labels_LSVC, table_LSVC = model_eval.eval(LSVC, EI_X_train, EI_y_train, EI_X_test, EI_y_test)
+#store results
+times_LSVC.to_pickle("src/models/results/LSVC_EI_times.pkl")
+labels_LSVC.to_pickle("src/models/results/LSVC_EI_labels.pkl")
+table_LSVC.to_pickle("src/models/results/LSVC_EI_class_results.pkl")
 
 ### XGBoost ###
-## E/I
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(EI_x)
+times_XGB, labels_XGB, table_XGB = model_eval.eval(XGB, EI_X_train, EI_y_train, EI_X_test, EI_y_test)
+#store results
+times_XGB.to_pickle("src/models/results/XGB_EI_times.pkl")
+labels_XGB.to_pickle("src/models/results/XGB_EI_labels.pkl")
+table_XGB.to_pickle("src/models/results/XGB_EI_class_results.pkl")
 
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, EI_y)
+### Random Forest ###
+times_RF, labels_RF, table_RF = model_eval.eval(RF, EI_X_train, EI_y_train, EI_X_test, EI_y_test)
+#store results
+times_RF.to_pickle("src/models/results/RF_EI_times.pkl")
+labels_RF.to_pickle("src/models/results/RF_EI_labels.pkl")
+table_RF.to_pickle("src/models/results/RF_EI_class_results.pkl")
 
-xgb = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=1)
 
-t0 = time.time()
-xgb.fit(X_train,y_train)
-t1 = time.time() # ending time
-xgb_train_time_EI = t1-t0
+### NS ###
+LG = LogisticRegression(random_state=0, C=10, penalty='l1', solver = 'liblinear', max_iter=1000)
+LSVC = LinearSVC(random_state = 0, C = 100, penalty = 'l2')
+XGB = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=1)
+RF = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=10, min_samples_leaf=1, min_samples_split=2, n_estimators=100)
 
-t0 = time.time()
-y_true, y_pred_xgb = y_test, xgb.predict(X_test)
-t1 = time.time() # ending time
-xgb_pred_time = t1-t0
+### LogisticRegression ###
+times_LG, labels_LG, table_LG = model_eval.eval(LG, NS_X_train, NS_y_train, NS_X_test, NS_y_test)
+#store results
+times_LG.to_pickle("src/models/results/LG_NS_times.pkl")
+labels_LG.to_pickle("src/models/results/LG_NS_labels.pkl")
+table_LG.to_pickle("src/models/results/LG_NS_class_results.pkl")
 
-xgb_report = classification_report(y_true, y_pred_xgb, output_dict=True)
-df_xgb = pd.DataFrame(xgb_report)
+### Linear SVM ###
+times_LSVC, labels_LSVC, table_LSVC = model_eval.eval(LSVC, NS_X_train, NS_y_train, NS_X_test, NS_y_test)
+#store results
+times_LSVC.to_pickle("src/models/results/LSVC_NS_times.pkl")
+labels_LSVC.to_pickle("src/models/results/LSVC_NS_labels.pkl")
+table_LSVC.to_pickle("src/models/results/LSVC_NS_class_results.pkl")
 
-## N/S
-#process raw text into ML compatible features
-X = extraction.feature_Tfidf(NS_x)
+### XGBoost ###
+times_XGB, labels_XGB, table_XGB = model_eval.eval(XGB, NS_X_train, NS_y_train, NS_X_test, NS_y_test)
+#store results
+times_XGB.to_pickle("src/models/results/XGB_NS_times.pkl")
+labels_XGB.to_pickle("src/models/results/XGB_NS_labels.pkl")
+table_XGB.to_pickle("src/models/results/XGB_NS_class_results.pkl")
 
-#split text data
-X_train, X_val, X_test, y_train, y_val, y_test = train_val_test.split(X, NS_y)
+### Random Forest ###
+times_RF, labels_RF, table_RF = model_eval.eval(RF, NS_X_train, NS_y_train, NS_X_test, NS_y_test)
+#store results
+times_RF.to_pickle("src/models/results/RF_NS_times.pkl")
+labels_RF.to_pickle("src/models/results/RF_NS_labels.pkl")
+table_RF.to_pickle("src/models/results/RF_NS_class_results.pkl")
 
-xgb = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=1)
 
-t0 = time.time()
-xgb.fit(X_train,y_train)
-t1 = time.time() # ending time
-xgb_train_time_NS = t1-t0
+### TF ###
+LG = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
+LSVC = LinearSVC(random_state = 0, C = 10, penalty = 'l2')
+XGB = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=.5)
+RF = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=60, min_samples_leaf=1, min_samples_split=5, n_estimators=1000)
 
-t0 = time.time()
-y_true, y_pred_NS_xgb = y_test, xgb.predict(X_test)
-t1 = time.time() # ending time
-xgb_pred_time = t1-t0
 
-xgb_report = classification_report(y_true, y_pred_xgb, output_dict=True)
-df_xgb = pd.DataFrame(xgb_report)
+### LogisticRegression ###
+times_LG, labels_LG, table_LG = model_eval.eval(LG, TF_X_train, TF_y_train, TF_X_test, TF_y_test)
+#store results
+times_LG.to_pickle("src/models/results/LG_TF_times.pkl")
+labels_LG.to_pickle("src/models/results/LG_TF_labels.pkl")
+table_LG.to_pickle("src/models/results/LG_TF_class_results.pkl")
 
-#TF
-xgb = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.1, max_depth=10, subsample=.5)
+### Linear SVM ###
+times_LSVC, labels_LSVC, table_LSVC = model_eval.eval(LSVC, TF_X_train, TF_y_train, TF_X_test, TF_y_test)
+#store results
+times_LSVC.to_pickle("src/models/results/LSVC_TF_times.pkl")
+labels_LSVC.to_pickle("src/models/results/LSVC_TF_labels.pkl")
+table_LSVC.to_pickle("src/models/results/LSVC_TF_class_results.pkl")
 
-#JP
-xgb = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.05, max_depth=10, subsample=1)
+### XGBoost ###
+times_XGB, labels_XGB, table_XGB = model_eval.eval(XGB, TF_X_train, TF_y_train, TF_X_test, TF_y_test)
+#store results
+times_XGB.to_pickle("src/models/results/XGB_TF_times.pkl")
+labels_XGB.to_pickle("src/models/results/XGB_TF_labels.pkl")
+table_XGB.to_pickle("src/models/results/XGB_TF_class_results.pkl")
+
+### Random Forest ###
+times_RF, labels_RF, table_RF = model_eval.eval(RF, TF_X_train, TF_y_train, TF_X_test, TF_y_test)
+#store results
+times_RF.to_pickle("src/models/results/RF_TF_times.pkl")
+labels_RF.to_pickle("src/models/results/RF_TF_labels.pkl")
+table_RF.to_pickle("src/models/results/RF_TF_class_results.pkl")
+
+### JP ###
+LG = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear', max_iter=1000)
+LSVC = LinearSVC(random_state = 0, C = 10, penalty = 'l2')
+XGB = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror", eta=0.05, max_depth=10, subsample=1)
+RF = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=60, min_samples_leaf=1, min_samples_split=5, n_estimators=100)
+
+### LogisticRegression ###
+times_LG, labels_LG, table_LG = model_eval.eval(LG, JP_X_train, JP_y_train, JP_X_test, JP_y_test)
+#store results
+times_LG.to_pickle("src/models/results/LG_JP_times.pkl")
+labels_LG.to_pickle("src/models/results/LG_JP_labels.pkl")
+table_LG.to_pickle("src/models/results/LG_JP_class_results.pkl")
+
+### Linear SVM ###
+times_LSVC, labels_LSVC, table_LSVC = model_eval.eval(LSVC, JP_X_train, JP_y_train, JP_X_test, JP_y_test)
+#store results
+times_LSVC.to_pickle("src/models/results/LSVC_JP_times.pkl")
+labels_LSVC.to_pickle("src/models/results/LSVC_JP_labels.pkl")
+table_LSVC.to_pickle("src/models/results/LSVC_JP_class_results.pkl")
+
+### XGBoost ###
+times_XGB, labels_XGB, table_XGB = model_eval.eval(XGB, JP_X_train, JP_y_train, JP_X_test, JP_y_test)
+#store results
+times_XGB.to_pickle("src/models/results/XGB_JP_times.pkl")
+labels_XGB.to_pickle("src/models/results/XGB_JP_labels.pkl")
+table_XGB.to_pickle("src/models/results/XGB_JP_class_results.pkl")
+
+### Random Forest ###
+times_RF, labels_RF, table_RF = model_eval.eval(RF, JP_X_train, JP_y_train, JP_X_test, JP_y_test)
+#store results
+times_RF.to_pickle("src/models/results/RF_JP_times.pkl")
+labels_RF.to_pickle("src/models/results/RF_JP_labels.pkl")
+table_RF.to_pickle("src/models/results/RF_JP_class_results.pkl")

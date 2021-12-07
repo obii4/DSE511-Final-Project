@@ -26,7 +26,7 @@ def tune(Z):
     # Number of estimators
     n_estimators = [100, 1000]
     # Maximum number of levels in tree
-    max_depth = [int(x) for x in np.linspace(10, 110, num=5)]
+    max_depth = [5, 10] #[int(x) for x in np.linspace(10, 110, num=5)]
     max_depth.append(None)
     # Minimum number of samples required to split a node
     min_samples_split = [2, 5]  # 10]
