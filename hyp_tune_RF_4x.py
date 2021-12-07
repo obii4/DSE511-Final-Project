@@ -14,13 +14,13 @@ cleaned = clean_text.clean_mbti(data)
 EI, NS, TF, JP = dimension_4x.text_split(cleaned)
 
 ## EI Logistic Regression Tuning ##
-EI_para = rf_hyp.tune(EI)
+#EI_para = rf_hyp.tune(EI)
 
 ## NS Logistic Regression Tuning ##
-NS_para = rf_hyp_hyp.tune(NS)
+NS_para = rf_hyp.tune(NS)
 
 ## TF Logistic Regression Tuning ##
-TF_para = rf_hyp_hyp.tune(TF)
+TF_para = rf_hyp.tune(TF)
 
 ## JP Logistic Regression Tuning ##
-JP_para = rf_hyp_hyp.tune(JP)
+JP_para = rf_hyp.tune(JP)
