@@ -21,7 +21,7 @@ def clean_mbti(data):
     data['posts'] = data['posts'].apply(lambda x: re.sub(r'[^a-zA-Z\s]','',x))
     
     #remove puncuation
-    data['posts'] = data['posts'].apply(lambda x: re.sub(r'[\.+]', ".",x)) 
+    data['posts'] = data['posts'].apply(lambda x: re.sub(r'[\.+]', ".",x))
     
     #remove extra spaces
     data['posts'] = data['posts'].str.replace('[^\w\s]',' ').str.replace('\s\s+', ' ') 

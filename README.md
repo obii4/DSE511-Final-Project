@@ -9,7 +9,8 @@ Project Organization
     ├── LICENSE
     ├── README.md          <- The top-level README for developers using this project.
     ├── raw data 	             <- The original, immutable data dump.
-    ├── main.py                  <- model testing, obtain all experiment results 
+    ├── main_n16.py                  <- model testing for n=16 problem, obtain all experiment results 
+    ├── main_n2.py                    <- model testing for n=2 problem, obtain all experiment results 
     ├── summarize_results.py           	   <- generate tables that show accuracy, train/test times
     ├── hyp_tune_ALL.py            	           <- hyper parameter tuning for n=16 problem   
     ├── hyp_tune_lSVM_4x.py                  <- hyper parameter tuning for n=2 Linear SVM 

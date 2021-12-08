@@ -54,7 +54,7 @@ plt.margins(0,0)
 
 table(ax, accuracy_16)
 
-plt.savefig('src/visualizations/tables/summary_16.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
+plt.savefig('visualizations/tables/summary_16.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
 
 ### E/I ###
 ### Classification Report ###
@@ -107,7 +107,7 @@ plt.margins(0,0)
 
 table(ax, accuracy_EI)
 
-plt.savefig('src/visualizations/tables/summary_EI.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
+plt.savefig('visualizations/tables/summary_EI.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
 
 ### T/F ###
 ### Classification Report ###
@@ -160,7 +160,7 @@ plt.margins(0,0)
 
 table(ax, accuracy_TF)
 
-plt.savefig('src/visualizations/tables/summary_TF.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
+plt.savefig('visualizations/tables/summary_TF.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
 
 ### N/S ###
 ### Classification Report ###
@@ -213,7 +213,7 @@ plt.margins(0,0)
 
 table(ax, accuracy_NS)
 
-plt.savefig('src/visualizations/tables/summary_NS.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
+plt.savefig('visualizations/tables/summary_NS.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
 
 ### J/P ###
 ### Classification Report ###
@@ -266,4 +266,6 @@ plt.margins(0,0)
 
 table(ax, accuracy_JP)
 
-plt.savefig('src/visualizations/tables/summary_JP.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
+plt.savefig('visualizations/tables/summary_JP.png',dpi=700, transparent = True, bbox_inches = 'tight', pad_inches = 0)
+
+
