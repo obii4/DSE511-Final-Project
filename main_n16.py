@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import time
+import pickle
 from sklearn.metrics import classification_report
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -36,7 +37,8 @@ LG = LogisticRegression(random_state=0, C=100, penalty='l2', solver = 'liblinear
 times_LG, labels_LG, table_LG = model_eval.eval(LG, X_train, y_train, X_test, y_test)
 #store results
 times_LG.to_pickle("src/models/results/LG_16_times.pkl")
-labels_LG.to_pickle("src/models/results/LG_16_labels.pkl")
+with open("src/models/results/LG_16_labels.pkl", 'wb') as f:
+    pickle.dump(labels_LG, f)
 table_LG.to_pickle("src/models/results/LG_16_class_results.pkl")
 
 ### Linear SVM ###
@@ -44,7 +46,8 @@ LSVC = LinearSVC(random_state=0, C=10, penalty='l2')
 times_LSVC, labels_LSVC, table_LSVC = model_eval.eval(LSVC, X_train, y_train, X_test, y_test)
 #store results
 times_LSVC.to_pickle("src/models/results/LSVC_16_times.pkl")
-labels_LSVC.to_pickle("src/models/results/LSVC_16_labels.pkl")
+with open("src/models/results/LSVC_16_labels.pkl", 'wb') as f:
+    pickle.dump(labels_LSVC, f)
 table_LSVC.to_pickle("src/models/results/LSVC_16_class_results.pkl")
 
 ### XGBoost ###
@@ -52,7 +55,8 @@ XGB = XGBClassifier(use_label_encoder=False, random_state=0, eval_metric="merror
 times_XGB, labels_XGB, table_XGB = model_eval.eval(XGB, X_train, y_train, X_test, y_test)
 #store results
 times_XGB.to_pickle("src/models/results/XGB_16_times.pkl")
-labels_XGB.to_pickle("src/models/results/XGB_16_labels.pkl")
+with open("src/models/results/XGB_16_labels.pkl", 'wb') as f:
+    pickle.dump(labels_XGB, f)
 table_XGB.to_pickle("src/models/results/XGB_16_class_results.pkl")
 
 ### Random Forest ###
@@ -60,7 +64,8 @@ RF = RandomForestClassifier(random_state=0, bootstrap=False, max_depth=None, min
 times_RF, labels_RF, table_RF = model_eval.eval(RF, X_train, y_train, X_test, y_test)
 #store results
 times_RF.to_pickle("src/models/results/RF_16_times.pkl")
-labels_RF.to_pickle("src/models/results/RF_16_labels.pkl")
+with open("src/models/results/RF_16_labels.pkl", 'wb') as f:
+    pickle.dump(labels_RF, f)
 table_RF.to_pickle("src/models/results/RF_16_class_results.pkl")
 
 
