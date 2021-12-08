@@ -37,15 +37,15 @@ roc_auc0_xgb = metrics.auc(fpr_xgb_0, tpr_xgb_0)
 roc_auc1_xgb = metrics.auc(fpr_xgb_1, tpr_xgb_1)
 
 
-plt.title('N/S ROC')
-plt.plot(fpr_lg_0, tpr_lg_0, 'b--', label = 'LG Class N, AUC = %0.2f' % roc_auc0_lg)
-plt.plot(fpr_lg_1, tpr_lg_1, 'b', label = 'LG Class S, AUC = %0.2f' % roc_auc1_lg)
+plt.title('N/s ROC')
+plt.plot(fpr_lg_0, tpr_lg_0, 'b--', label = 'LG Class S, AUC = %0.2f' % roc_auc0_lg)
+plt.plot(fpr_lg_1, tpr_lg_1, 'b', label = 'LG Class N, AUC = %0.2f' % roc_auc1_lg)
 
-plt.plot(fpr_rf_0, tpr_rf_0, 'r--', label = 'RF Class N, AUC = %0.2f' % roc_auc0_rf)
-plt.plot(fpr_rf_1, tpr_rf_1, 'r', label = 'RF Class S, AUC = %0.2f' % roc_auc1_rf)
+plt.plot(fpr_rf_0, tpr_rf_0, 'r--', label = 'RF Class S, AUC = %0.2f' % roc_auc0_rf)
+plt.plot(fpr_rf_1, tpr_rf_1, 'r', label = 'RF Class N, AUC = %0.2f' % roc_auc1_rf)
 
-plt.plot(fpr_xgb_0, tpr_xgb_0, 'g--', label = 'XGB Class N, AUC = %0.2f' % roc_auc0_xgb)
-plt.plot(fpr_xgb_1, tpr_xgb_1, 'g', label = 'XGB Class S, AUC = %0.2f' % roc_auc1_xgb)
+plt.plot(fpr_xgb_0, tpr_xgb_0, 'g--', label = 'XGB Class S, AUC = %0.2f' % roc_auc0_xgb)
+plt.plot(fpr_xgb_1, tpr_xgb_1, 'g', label = 'XGB Class N, AUC = %0.2f' % roc_auc1_xgb)
 
 plt.legend(loc = 'lower right')
 plt.plot([0, 1], [0, 1],'m--')
