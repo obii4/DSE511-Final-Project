@@ -3,6 +3,8 @@ DSE_511_Final_Project
 
 Using Post Content to Determine Personality Type
 
+To run code, download the data and place it on your desktop.
+
 Project Organization
 ------------
 
