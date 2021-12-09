@@ -13,6 +13,7 @@ from src.data import train_val_test
 from src.features import extraction
 
 def tune(Z):
+    '''tunes random forest models'''
     X = Z['posts']
     y = Z['type']
 
