@@ -15,6 +15,7 @@ from src.data import encode
 
 
 def tune(Z):
+    '''tunes linear logistic models'''
     X = Z['posts']
     y = Z['type']
 
