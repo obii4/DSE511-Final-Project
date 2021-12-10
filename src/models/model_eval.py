@@ -22,10 +22,10 @@ def eval(model, X_train, y_train, X_test, y_test):
     y_true, y_pred = y_test, model.predict(X_test)
     t3 = time.time()  # ending time
     test_time = t3 - t2
-    proba = model.predict_proba(X_test)
+    #proba = model.predict_proba(X_test)
 
     report = classification_report(y_true, y_pred, output_dict=True)
     report_df = pd.DataFrame(report)
     times = pd.DataFrame({'train_time': [train_time], 'test_time': [test_time]})
 
-    return times, [y_true, y_pred, proba], report_df
+    return times, [y_true, y_pred], report_df #[y_true, y_pred, proba]

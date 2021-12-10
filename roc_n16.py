@@ -9,7 +9,7 @@ import sklearn.metrics as metrics
 
 
 
-with open("src/models/results/xgb_16_labels.pkl", 'rb') as f:
+with open("src/models/results/rf_16_labels.pkl", 'rb') as f:
     lg_labels = pickle.load(f)
 
 
@@ -53,23 +53,23 @@ roc_auc15 = metrics.auc(fpr15, tpr15)
 #{'ENFJ': 0, 'ENFP': 1, 'ENTJ': 2, 'ENTP': 3, 'ESFJ': 4, 'ESFP': 5, 'ESTJ': 6, 'ESTP': 7, 'INFJ': 8, 'INFP': 9,
 # 'INTJ': 10, 'INTP': 11, 'ISFJ': 12, 'ISFP': 13, 'ISTJ': 14, 'ISTP': 15}
 
-plt.title('XGB ROC')
-plt.plot(fpr0, tpr0, 'b--', label = 'ISTP, AUC = %0.2f' % roc_auc0)
-plt.plot(fpr1, tpr1, 'b', label = 'ISTJ, AUC = %0.2f' % roc_auc1)
-plt.plot(fpr2, tpr2, 'r--', label = 'ISFP, AUC = %0.2f' % roc_auc2)
-plt.plot(fpr3, tpr3, 'r', label = 'ISFJ, AUC = %0.2f' % roc_auc3)
-plt.plot(fpr4, tpr4, 'g--', label = 'INTP, AUC = %0.2f' % roc_auc4)
-plt.plot(fpr5, tpr5, 'g', label = 'INTJ, AUC = %0.2f' % roc_auc5)
-plt.plot(fpr6, tpr6, 'c--', label = 'INFP, AUC = %0.2f' % roc_auc6)
-plt.plot(fpr7, tpr7, 'm--', label = 'INFJ, AUC = %0.2f' % roc_auc7)
-plt.plot(fpr8, tpr8, 'm', label = 'ESTP, AUC = %0.2f' % roc_auc8)
-plt.plot(fpr9, tpr9, 'y--', label = 'ESTJ, AUC = %0.2f' % roc_auc9)
-plt.plot(fpr10, tpr10, 'y', label = 'ESFP, AUC = %0.2f' % roc_auc10)
-plt.plot(fpr11, tpr11, 'm-.', label = 'ESFJ, AUC = %0.2f' % roc_auc11)
-plt.plot(fpr12, tpr12, 'b-.', label = 'ENTP, AUC = %0.2f' % roc_auc12)
-plt.plot(fpr13, tpr13, 'k-.', label = 'ENTJ, AUC = %0.2f' % roc_auc13)
-plt.plot(fpr14, tpr14, 'k', label = 'ENFP, AUC = %0.2f' % roc_auc14)
-plt.plot(fpr15, tpr15, 'k', label = 'ENFJ, AUC = %0.2f' % roc_auc15)
+plt.title('Random Forest ROC')
+plt.plot(fpr0, tpr0, 'b--', label = 'ENFJ, AUC = %0.2f' % roc_auc0)
+plt.plot(fpr1, tpr1, 'b', label = 'ENFP, AUC = %0.2f' % roc_auc1)
+plt.plot(fpr2, tpr2, 'r--', label = 'ENTJ, AUC = %0.2f' % roc_auc2)
+plt.plot(fpr3, tpr3, 'r', label = 'ENTP, AUC = %0.2f' % roc_auc3)
+plt.plot(fpr4, tpr4, 'g--', label = 'ESFJ, AUC = %0.2f' % roc_auc4)
+plt.plot(fpr5, tpr5, 'g', label = 'ESFP, AUC = %0.2f' % roc_auc5)
+plt.plot(fpr6, tpr6, 'c--', label = 'ESTJ, AUC = %0.2f' % roc_auc6)
+plt.plot(fpr7, tpr7, 'm--', label = 'ESTP, AUC = %0.2f' % roc_auc7)
+plt.plot(fpr8, tpr8, 'm', label = 'INFJ, AUC = %0.2f' % roc_auc8)
+plt.plot(fpr9, tpr9, 'y--', label = 'INFP, AUC = %0.2f' % roc_auc9)
+plt.plot(fpr10, tpr10, 'y', label = 'INTJ, AUC = %0.2f' % roc_auc10)
+plt.plot(fpr11, tpr11, 'm-.', label = 'INTP, AUC = %0.2f' % roc_auc11)
+plt.plot(fpr12, tpr12, 'b-.', label = 'ISFJ, AUC = %0.2f' % roc_auc12)
+plt.plot(fpr13, tpr13, 'k-.', label = 'ISFP, AUC = %0.2f' % roc_auc13)
+plt.plot(fpr14, tpr14, 'k', label = 'ISTJ, AUC = %0.2f' % roc_auc14)
+plt.plot(fpr15, tpr15, 'k', label = 'ISTP, AUC = %0.2f' % roc_auc15)
 
 plt.legend(loc=(1.01,0))
 plt.plot([0, 1], [0, 1],'m--')
@@ -79,7 +79,7 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 plt.rcParams["figure.figsize"] = (7,5)
 plt.tight_layout()
-plt.savefig('visualizations/roc/xgb_n_roc.png', dpi=700, bbox_inches = "tight")
+plt.savefig('visualizations/roc/rf_n_roc.png', dpi=700, bbox_inches = "tight")
 plt.show()
 
 
