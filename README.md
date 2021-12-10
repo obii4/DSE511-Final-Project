@@ -16,6 +16,7 @@ Project Organization
     ├── roc_n16.py                   <- generate roc curves for n=16 problem
     ├── roc_n2.py                    <- generate roc curves forn=2 problem
     ├── summarize_results.py         <- generate tables that show accuracy, train/test times
+    ├── misclassifications.py        <- misclassified terms for each model for n=16 problem
     ├── hyp_tune_ALL.py            	 <- hyper parameter tuning for n=16 problem   
     ├── hyp_tune_lSVM_4x.py          <- hyper parameter tuning for n=2 Linear SVM 
     ├── hyp_tune_log_reg_4x.py       <- hyper parameter tuning for n=2 logistic regression
